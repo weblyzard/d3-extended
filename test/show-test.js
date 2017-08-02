@@ -7,12 +7,12 @@ test('show - display hidden element', function(t){
 
   var testDiv = helper.createDOMwithTestNode()
     .style('display', 'none');
-  
+
 
   t.equal(testDiv.node().style.display, 'none');
-    
+
   testDiv.show();
 
   //the element should now have the display property removed
-  t.equal(testDiv.node().style.display, '');
+  t.equal(testDiv.node().style.display, 'block');
 });
