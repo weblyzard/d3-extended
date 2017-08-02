@@ -81,6 +81,11 @@ d3.selection.prototype.first = function() {
 d3.selection.prototype.hasClass = function(className) {
   return this.classed(className);
 }
+d3.selection.prototype.height = function() {
+	var node = this.node();
+	return (node.getBBox ? node.getBBox() : node.getBoundingClientRect()).height;
+}
+
 d3.selection.prototype.hide = function() {
   this.style('display', 'none');
   return this;
@@ -140,13 +145,38 @@ d3.selection.prototype.removeClass = function(classNames) {
 }
 
 d3.selection.prototype.show = function() {
-  this.style('display', '');
+	var element = this[0][0];
+	if (!element) return this;
+
+	var tagName = element.tagName;
+  var cStyle,
+      t = document.createElement(tagName),
+      gcs = "getComputedStyle" in window;
+
+  document.body.appendChild(t);
+  cStyle = (gcs ? window.getComputedStyle(t, "") : t.currentStyle).display;
+  document.body.removeChild(t);
+
+  this.style('display', cStyle);
   return this;
 }
+
 d3.selection.prototype.toggle = function() {
+
+  var tagName = this._groups[0][0].tagName;
+  var cStyle,
+      t = document.createElement(tagName),
+      gcs = "getComputedStyle" in window;
+
+  document.body.appendChild(t);
+  cStyle = (gcs ? window.getComputedStyle(t, "") : t.currentStyle).display;
+  document.body.removeChild(t);
+
+
   var isHidden = this.style('display') == 'none';
-  return this.style('display', isHidden ? 'inherit' : 'none');
+  return this.style('display', isHidden ? cStyle : 'none');
 }
+
 d3.selection.prototype.toggleClass = function(classNames) {
   var classes = classNames.split(' ');
 
@@ -160,6 +190,11 @@ d3.selection.prototype.trigger = function(evtName, data) {
   d3_selection_on.apply(this, [evtName])(data);
    return this;
 }
+d3.selection.prototype.width = function() {
+	var node = this.node();
+	return (node.getBBox ? node.getBBox() : node.getBoundingClientRect()).width;
+}
+
 
 return d3;
 }
