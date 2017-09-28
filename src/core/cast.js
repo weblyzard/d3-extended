@@ -12,7 +12,9 @@ d3.cast = function(other) {
 	}
 
 	if (other.jquery) {
-		console.warn('Casting jQuery object to d3.selection'); // eslint-disable-line no-console
+		if (console && console.warn) {
+			console.warn('Casting jQuery object to d3.selection');
+		}
 		return d3.selectAll(other.selector);
 	}
 
